@@ -23,6 +23,7 @@ app.get('/', (req, res) => {
     });
 });
 
+//=================== CANDIDATE ROUTES ========================//
 //db object using all method to show rows matching query
 app.get('/api/candidates', (req, res) => {
     const sql = `SELECT candidates.*, parties.name
@@ -107,6 +108,80 @@ app.post('/api/candidate', ({ body }, res) => { //destructured req obj to pull b
         });
     });
 });
+
+//Update a candidate
+app.put('/api/candidate/:id', (req, res) => {
+    const errors = inputCheck(req.body, 'party_id');
+    const sql = `UPDATE candidates SET party_id = ?
+                WHERE id = ?`;
+    const params = [req.body.party_id, req.params.id];
+
+    db.run(sql, params, function(err, result) {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({
+            message: "success",
+            data: req.body,
+            changes: this.changes
+        });
+    });
+});
+//=================== CANDIDATE ROUTES END ========================//
+
+
+
+//=================== PARTIES ROUTES ========================//
+//Get all parties
+app.get('/api/parties', (req, res) => {
+    const sql = `SELECT * FROM parties`;
+    const params = [];
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json({
+            message: "success",
+            data: rows
+        });
+    });
+});
+
+//Get single party by ID
+app.get('/api/party/:id', (req, res) => {
+    const sql = `SELECT * From parties WHERE id = ?`;
+    const params = [req.params.id];
+    db.get(sql, params, (err, row) => {
+        if(err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({
+            message: "success",
+            data: row
+        });
+    });
+});
+
+//Delete party
+app.delete('/api/party/:id', (req, res) => {
+    const sql = `DELETE FROM parties WHERE id = ?`;
+    const params = [req.params.id];
+    db.run(sql, params, function(err, result) {
+        if(err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({
+            message: "Successfully deleted",
+            changes: this.changes
+        });
+    });
+});
+
+//=================== PARTIES ROUTES END ========================//
 
 // Default response for any other request (Not Found) Catch all
 app.use((req,res) => {
