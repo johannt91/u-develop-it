@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require('../../db/database');
 const inputCheck = require('../../utils/inputCheck');
 
-//Get all voters
+//=========== GET ALL VOTERS ============//
 router.get('/voters', (req, res) => {
     const sql = `SELECT * FROM voters ORDER BY last_name`;
     const params = [];
@@ -21,6 +21,7 @@ router.get('/voters', (req, res) => {
     });
 });
 
+//=========== GET SINGLE VOTER BY ID =============//
 router.get('/voter/:id', (req, res) => {
     const sql = `SELECT * FROM voters WHERE id = ?`;
     const params = [req.params.id];
@@ -38,7 +39,7 @@ router.get('/voter/:id', (req, res) => {
     });
 });
 
-// Create a voter
+//=========== ADD A VOTER =============//
 router.post('/voter', ({
     body
 }, res) => {
@@ -69,7 +70,7 @@ router.post('/voter', ({
     });
 });
 
-// Allow user to update their email address
+//=========== UPDATE VOTER EMAIL ADDRESS =============//
 router.put('/voter/:id', (req, res) => {
     //Data validation
     const errors = inputCheck(req.body, 'email');
@@ -96,7 +97,7 @@ router.put('/voter/:id', (req, res) => {
 });
 
 
-// Delete a voter
+//=========== DELETE VOTER =============//
 router.delete('/voter/:id', (req, res) => {
     const sql = `DELETE FROM voters WHERE id = ?`;
 
