@@ -69,3 +69,19 @@ VALUES
   ('Hubert', 'Crackanthorpe', 'hcrackan@goodletters.com'),
   ('William', 'Carleton', 'wcarleton@literature.com'),
   ('Gerald', 'Griffin', 'ggriff@lit.net');
+
+INSERT INTO votes (vote_id, candidate_id)
+VALUES
+  (3,1),
+  (4,2),
+  (5,2),
+  (6,2),
+  (7,2),
+  (8,3),
+  (9,3);
+SELECT candidates.*, parties.name AS party_name, COUNT(candidate_id) AS count
+FROM votes
+LEFT JOIN candidates ON votes.candidate_id = candidates.id
+LEFT JOIN parties ON candidates.party_id = parties.id
+GROUP BY candidate_id ORDER BY count DESC;
+
